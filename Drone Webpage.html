@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Aid Delivery</title>
+    <style>
+        /* General reset and body styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        section {
+            padding: 20px;
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input, form select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#request">Request Aid</a></li>
+                <li><a href="#tracker">Drone Tracker</a></li>
+                <li><a href="#donate">Donate</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Revolutionizing Crisis Aid with Drone Technology</h1>
+        <p>Delivering essential supplies to areas affected by crisis using cutting-edge drone technology.</p>
+        <button onclick="window.location.href='#request'">Request Aid</button>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are a team committed to leveraging drone technology to provide rapid and efficient aid delivery in crisis situations.</p>
+    </section>
+
+    <!-- Request Aid Section -->
+    <section id="request">
+        <h2>Request Aid</h2>
+        <form action="#" method="POST">
+            <label for="orgName">Organization Name:</label>
+            <input type="text" id="orgName" name="orgName" required><br>
+
+            <label for="location">Location (Latitude, Longitude):</label>
+            <input type="text" id="location" name="location" required><br>
+
+            <label for="aidType">Type of Aid Needed:</label>
+            <input type="text" id="aidType" name="aidType" required><br>
+
+            <label for="urgency">Urgency Level:</label>
+            <select id="urgency" name="urgency">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select><br>
+
+            <input type="submit" value="Submit Request">
+        </form>
+    </section>
+
+    <!-- Drone Tracker Section -->
+    <section id="tracker">
+        <h2>Drone Tracker</h2>
+        <div id="map"></div>
+    </section>
+
+    <!-- Donation Section -->
+    <section id="donate">
+        <h2>Support Our Mission</h2>
+        <div id="paypal-button-container">
+            <!-- PayPal Button -->
+            <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+            <div id="paypal-button-container"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Drone Aid Solutions. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Google Maps API and PayPal -->
+    <script>
+        // Initialize Google Maps
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 37.7749, lng: -122.4194 }, // Set to an example location (San Francisco)
+                zoom: 10,
+            });
+
+            // Example Drone Locations (Markers)
+            var droneLocations = [
+                { lat: 37.7749, lng: -122.4194, title: "Drone 1" },
+                { lat: 37.7849, lng: -122.4294, title: "Drone 2" },
+            ];
+
+            droneLocations.forEach(function(location) {
+                new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: location.title,
+                });
+            });
+        }
+
+        // PayPal Button Configuration
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '10.00'  // You can set your donation amount here
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert('Donation Successful! Thank you, ' + details.payer.name.given_name);
+                });
+            }
+        }).render('#paypal-button-container'); // Render the PayPal button
+
+        // Load Google Maps API
+        window.initMap = initMap;
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+</body>
+</html>
